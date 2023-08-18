@@ -1,0 +1,23 @@
+{
+  "name": "webcrawler",
+  "version": "1.0.0",
+  "description": "Spike into webcrawler builds",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brianmaclopez/webcrawler.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brianmaclopez/webcrawler/issues"
+  },
+  "homepage": "https://github.com/brianmaclopez/webcrawler#readme",
+  "devDependencies": {
+    "jest": "^29.6.2"
+  }
+}

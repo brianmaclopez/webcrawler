@@ -1,5 +1,5 @@
 const { test, expect } = require('@jest/globals');
-const { normalizeURL } = require('./crawl.js')
+const { normalizeURL, getURLsFromHTML } = require('./crawl.js')
 
 /* TEST_SUITE:1 normalizeURL function tests */
 
@@ -32,3 +32,10 @@ test('normalizeURL case insensitivity', () => {
   result = 'blog.boot.dev/path'
   expect(normalizeURL(inputURL)).toBe(result);
 });
+
+/* TEST_SUITE:2 getURLsFromHTML function tests */
+
+test('getURLsFromHTML', () => {
+  const urls = []
+  expect(getURLsFromHTML()).toEqual(urls);
+})

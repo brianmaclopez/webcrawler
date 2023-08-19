@@ -23,6 +23,12 @@ function normalizeURL(baseURL) {
 
 }
 
+function getURLsFromHTML() {
+  const urls = [];
+  return urls;
+}
+
 module.exports = {
-  normalizeURL
+  normalizeURL, 
+  getURLsFromHTML
 }

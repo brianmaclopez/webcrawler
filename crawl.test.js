@@ -35,7 +35,43 @@ test('normalizeURL case insensitivity', () => {
 
 /* TEST_SUITE:2 getURLsFromHTML function tests */
 
-test('getURLsFromHTML', () => {
-  const urls = []
-  expect(getURLsFromHTML()).toEqual(urls);
+test('getURLsFromHTML single URL', () => {
+  const baseUrl = 'https://blog.boot.dev';
+  const htmlString = `
+  <html>
+  <body>
+      <a href="https://blog.boot.dev"><span>Go to Boot.dev</span></a>
+  </body>
+  </html>
+  `
+  const urls = [ 'https://blog.boot.dev/' ]
+  expect(getURLsFromHTML(htmlString, baseUrl)).toEqual(urls);
+})
+
+test('getURLsFromHTML multiple URLs', () => {
+  const baseUrl = 'https://blog.boot.dev';
+  const htmlString = `
+  <html>
+  <body>
+      <a href="https://blog.boot.dev"><span>Go to Boot.dev</span></a>
+      <a href="https://blog.boot.dev/path1"><span>Go to Boot.dev</span></a>
+      <a href="https://blog.boot.dev/path2"><span>Go to Boot.dev</span></a>
+  </body>
+  </html>
+  `
+  const urls = [ "https://blog.boot.dev/", "https://blog.boot.dev/path1", "https://blog.boot.dev/path2" ];
+  expect(getURLsFromHTML(htmlString, baseUrl)).toEqual(urls);
+})
+
+test('getURLsFromHTML normalize relative URLs', () => {
+  const htmlString = `
+  <html>
+  <body>
+      <a href="/path"><span>Go to Boot.dev</span></a>
+  </body>
+  </html>
+  `
+  const baseUrl = 'https://blog.boot.dev'
+  const urls = [ 'https://blog.boot.dev/path']
+  expect(getURLsFromHTML(htmlString, baseUrl)).toEqual(urls);
 })

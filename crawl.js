@@ -1,11 +1,6 @@
+const { JSDOM } = require('jsdom')
+
 function normalizeURL(baseURL) {
-  /*
-    The following should all normalize
-    https://blog.boot.dev/path/
-    https://BLOG.boot.dev/path
-    http://blog.boot.dev/path/
-    http://blog.boot.dev/path
-  */
 
   try {
     const urlObj = new URL(baseURL);
@@ -23,8 +18,30 @@ function normalizeURL(baseURL) {
 
 }
 
-function getURLsFromHTML() {
+function getURLsFromHTML(htmlBody, baseURL) {
+
+  const dom = (new JSDOM(htmlBody));
+  const linkElements = dom.window.document.querySelectorAll('a');
   const urls = [];
+
+  for (linkElement of linkElements) {
+    if (linkElement.href.slice(0, 1) === '/') {
+      try {
+        const url = new URL(linkElement.href, baseURL);
+        urls.push(`${url.origin}${url.pathname}`);
+      } catch (err) {
+        console.log(err.message);
+      }
+    } else {
+      try {
+        const url = new URL(linkElement.href);
+        urls.push(`${baseURL}${url.pathname}`)
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+  }
+
   return urls;
 }
 

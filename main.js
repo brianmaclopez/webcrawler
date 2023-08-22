@@ -2,14 +2,22 @@
 
 const { crawlPage, normalizeURL } = require('./crawl');
 
-async function main() {
+function main() {
   const argv = process.argv.slice(2);
   if (!argv.length) {
-    throw new Error('URL argument not provided\n\tUsage: node main.js <URL>')
+    console.log('provide URL argument');
+    process.exit(1);
   }
-  
-  const response = await crawlPage(argv[0]);
-  console.dir(response);
+
+  if (argv > 1) {
+    console.log('To many arguments passed to main');
+    process.exit(1);
+  }
+
+  console.log(`waiting for crawl page`);
+  const pages = {};
+  baseUrl = argv[0];
+  crawlPage(baseUrl, baseUrl, pages);
 }
 
 main();

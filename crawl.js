@@ -1,24 +1,40 @@
 const { JSDOM } = require('jsdom')
 
-async function crawlPage(url) {
+async function crawlPage(baseURL, currentURL, pages) {
+  // pages => {}
+
+  console.log(`crawling ${currentURL}...`);
+
+  const baseURLDomain = normalizeURL(baseURL);
+  const currentURLDomain = normalizeURL(currentURL);
+
+  if (baseURLDomain !== currentURLDomain) {
+    return pages;
+  }
+
+  pages[currentURLDomain] = (pages[currentURLDomain]+1) || 1 ;
+
   try {
-    async function getData(url) {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'text/html'
-        }
-      });
-      if (response.ok) {
-        return response.text();
-      } else {
-        return `HTTP ERROR: ${response.status}`;
-      }
+    const res = await fetch(currentURL);
+
+    if (res.status > 399) {
+      console.log(`ERROR: ${res.status}, at url: ${currentURL}`);
+      return
     }
 
-    return await typeof getData(url);
+    const contentType = res.headers.get('Content-Type');
+    if (!contentType.includes('text/html')) {
+      console.log(`ERROR: content-type not text/html, it is ${contentType} instead, at url: ${currentURL}`);
+      return
+    }
+
+    console.log(await res.status);
+    console.log(Object.keys(pages));
+    // Make a list of found links
+    // call each link on the list recursively.
+    return pages // For now
   } catch (err) {
-    console.log(err.message);
+    console.log(`ERROR: ${err.message}, at url ${currentURL}`);
   }
 }
 

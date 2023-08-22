@@ -84,10 +84,10 @@ test('getURLsFromHTML handle relative URLs', () => {
 //   expect(typeof crawlPage(url)).toBe('string')
 // })
 
-test('crawlPage prints HTTP error code', () => {
-  const url =   "https://wagslane";
-  expect(crawlPage(url)).toBe('HTTP ERROR: 404');
-})
+// test('crawlPage prints HTTP error code', () => {
+//   const url =   "https://wagslane";
+//   expect(crawlPage(url)).toBe('HTTP ERROR: 404');
+// })
 
 // test('crawlPage prints Content-Type error code', () => {
 //   const url =   "https://wagslane.dev";

@@ -1,16 +1,24 @@
 const { JSDOM } = require('jsdom')
 
-function crawlPage(url) {
-  async function getData(url) {
-    const response = await fetch(url, {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'X-API-Key': apiKey,
-        'Content-Type': 'application/json'
+async function crawlPage(url) {
+  try {
+    async function getData(url) {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'text/html'
+        }
+      });
+      if (response.ok) {
+        return response.text();
+      } else {
+        return `HTTP ERROR: ${response.status}`;
       }
-    })
-    return response.json()
+    }
+
+    return await typeof getData(url);
+  } catch (err) {
+    console.log(err.message);
   }
 }
 

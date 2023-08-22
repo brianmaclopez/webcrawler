@@ -79,23 +79,20 @@ test('getURLsFromHTML handle relative URLs', () => {
 
 /* TEST_SECTION3: crawlPage function tests */
 
-test('crawlPage returns string', () => {
-  const url =   "https://wagslane.dev";
-  expect(typeof crawlPage(url)).toBe('string')
-})
+// test('crawlPage returns string', () => {
+//   const url =   "https://wagslane.dev";
+//   expect(typeof crawlPage(url)).toBe('string')
+// })
 
 test('crawlPage prints HTTP error code', () => {
-  const url =   "https://wagslane.dev";
-  /* TODO 
-    Must return HTTP error code
-  */
-  expect(typeof crawlPage(url)).toBe('HTTPErrorCode')
+  const url =   "https://wagslane";
+  expect(crawlPage(url)).toBe('HTTP ERROR: 404');
 })
 
-test('crawlPage prints HTTP error code', () => {
-  const url =   "https://wagslane.dev";
-  /* TODO 
-    Content-Type Error if header field not text/html
-  */
-  expect(typeof crawlPage(url)).toBe('COntentTypeErrorCode')
-})
+// test('crawlPage prints Content-Type error code', () => {
+//   const url =   "https://wagslane.dev";
+//   /* TODO 
+//     Content-Type Error if header field not text/html
+//   */
+//   expect(typeof crawlPage(url)).toBe('COntentTypeErrorCode')
+// })

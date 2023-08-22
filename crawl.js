@@ -1,5 +1,19 @@
 const { JSDOM } = require('jsdom')
 
+function crawlPage(url) {
+  async function getData(url) {
+    const response = await fetch(url, {
+      method: 'GET',
+      mode: 'cors',
+      headers: {
+        'X-API-Key': apiKey,
+        'Content-Type': 'application/json'
+      }
+    })
+    return response.json()
+  }
+}
+
 function normalizeURL(baseURL) {
 
   try {
@@ -47,5 +61,6 @@ function getURLsFromHTML(htmlBody, baseURL) {
 
 module.exports = {
   normalizeURL, 
-  getURLsFromHTML
+  getURLsFromHTML, 
+  crawlPage
 }

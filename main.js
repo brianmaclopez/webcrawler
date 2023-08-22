@@ -1,6 +1,12 @@
-const { URL } = require('node:url');
+// Test on https://wagslane.dev
 
-console.log('Hello, Kitty');
-inputURL = 'http://blog.boot.dev/'
-const urlObj = new URL(inputURL);
-console.log(urlObj.hostname);
+function main() {
+  const argv = process.argv.slice(2);
+  if (!argv.length) {
+    throw new Error('URL argument not provided\n\tUsage: node main.js <URL>')
+  }
+  const whatT = typeof 'this';
+  console.log(whatT);
+}
+
+main();

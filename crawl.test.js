@@ -1,7 +1,7 @@
 const { test, expect } = require('@jest/globals');
-const { normalizeURL, getURLsFromHTML } = require('./crawl.js')
+const { normalizeURL, getURLsFromHTML, crawlPage } = require('./crawl.js')
 
-/* TEST_SUITE:1 normalizeURL function tests */
+/* TEST_SECTION:1 normalizeURL function tests */
 
 test('normalizeURL strip protocol', () => {
   inputURL = 'http://blog.boot.dev/path'
@@ -33,7 +33,7 @@ test('normalizeURL case insensitivity', () => {
   expect(normalizeURL(inputURL)).toBe(result);
 });
 
-/* TEST_SUITE:2 getURLsFromHTML function tests */
+/* TEST_SECTION:2 getURLsFromHTML function tests */
 
 test('getURLsFromHTML single URL', () => {
   const baseUrl = 'https://blog.boot.dev';
@@ -53,8 +53,9 @@ test('getURLsFromHTML multiple URLs', () => {
   const htmlString = `
   <html>
   <body>
-      <a href="https://blog.boot.dev"><span>Go to Boot.dev</span></a>
-      <a href="https://blog.boot.dev/path1"><span>Go to Boot.dev</span></a>
+      <a href="https://Blog.boot.dev"><span>Go to Boot.dev</span></a>
+      <p>Just a random lorm ipsum</p>
+      <a href="/path1"><span>Go to Boot.dev</span></a>
       <a href="https://blog.boot.dev/path2"><span>Go to Boot.dev</span></a>
   </body>
   </html>
@@ -63,7 +64,7 @@ test('getURLsFromHTML multiple URLs', () => {
   expect(getURLsFromHTML(htmlString, baseUrl)).toEqual(urls);
 })
 
-test('getURLsFromHTML normalize relative URLs', () => {
+test('getURLsFromHTML handle relative URLs', () => {
   const htmlString = `
   <html>
   <body>
@@ -74,4 +75,27 @@ test('getURLsFromHTML normalize relative URLs', () => {
   const baseUrl = 'https://blog.boot.dev'
   const urls = [ 'https://blog.boot.dev/path']
   expect(getURLsFromHTML(htmlString, baseUrl)).toEqual(urls);
+})
+
+/* TEST_SECTION3: crawlPage function tests */
+
+test('crawlPage returns string', () => {
+  const url =   "https://wagslane.dev";
+  expect(typeof crawlPage(url)).toBe('string')
+})
+
+test('crawlPage prints HTTP error code', () => {
+  const url =   "https://wagslane.dev";
+  /* TODO 
+    Must return HTTP error code
+  */
+  expect(typeof crawlPage(url)).toBe('HTTPErrorCode')
+})
+
+test('crawlPage prints HTTP error code', () => {
+  const url =   "https://wagslane.dev";
+  /* TODO 
+    Content-Type Error if header field not text/html
+  */
+  expect(typeof crawlPage(url)).toBe('COntentTypeErrorCode')
 })

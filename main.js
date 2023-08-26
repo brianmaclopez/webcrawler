@@ -18,6 +18,7 @@ function main() {
   const pages = {};
   baseUrl = argv[0];
   crawlPage(baseUrl, baseUrl, pages);
+  console.log(pages);
 }
 
 main();

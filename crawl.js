@@ -8,10 +8,12 @@ async function crawlPage(baseURL, currentURL, pages) {
   const baseURLDomain = normalizeURL(baseURL);
   const currentURLDomain = normalizeURL(currentURL);
 
-  if (baseURLDomain !== currentURLDomain) {
+  // Base case
+  if (baseURLDomain.hostname !== currentURLDomain.hostname) {
     return pages;
   }
 
+  // JS shorthand. Add pages entry with val of 1 if not found else add 1 to current val
   pages[currentURLDomain] = (pages[currentURLDomain]+1) || 1 ;
 
   try {
@@ -28,11 +30,16 @@ async function crawlPage(baseURL, currentURL, pages) {
       return
     }
 
-    console.log(await res.status);
-    console.log(Object.keys(pages));
+    // console.log(await res.status);
+    // console.log(Object.keys(pages));
+
     // Make a list of found links
+    const urlList = getURLsFromHTML(await res.text(), currentURL);
+    
     // call each link on the list recursively.
-    return pages // For now
+    urlList.forEach(url => {
+      crawlPage(currentURL, url, pages);
+    });
   } catch (err) {
     console.log(`ERROR: ${err.message}, at url ${currentURL}`);
   }

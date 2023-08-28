@@ -4,7 +4,7 @@
   "description": "Spike into webcrawler builds",
   "main": "main.js",
   "scripts": {
-    "start": "node main.js",
+    "start": "node main.js http://127.0.0.1:5500/webcrawler/",
     "test": "jest"
   },
   "repository": {

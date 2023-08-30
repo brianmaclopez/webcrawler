@@ -2,51 +2,43 @@ const { JSDOM } = require('jsdom')
 
 async function crawlPage(baseURL, currentURL, pages) {
   // pages => {}
-  const baseURLObj = new URL(baseURL);
-  const currentURLObj = new URL(currentURL);
-  const currentURLDomain = normalizeURL(currentURL);
+
   console.log(`crawling ${currentURL}...`);
-  // const baseURLDomain = normalizeURL(baseURL);
+
+  const baseURLDomain = normalizeURL(baseURL);
+  const currentURLDomain = normalizeURL(currentURL);
 
   // Base case
-  if (baseURLObj.hostname !== currentURLObj.hostname) {
+  if (baseURLDomain.hostname !== currentURLDomain.hostname) {
     return pages;
   }
 
-  // pages[currentURLDomain] = (pages[currentURLDomain]+1) || 1 ;
-  if (pages.hasOwnProperty(currentURLDomain)) {
-    pages[currentURLDomain]++;
-    return pages;
-  } else if (baseURL === currentURL) {
-    pages[currentURLDomain] = 0;
-  } else {
-    pages[currentURLDomain] = 1;
-  }
+  // JS shorthand. Add pages entry with val of 1 if not found else add 1 to current val
+  pages[currentURLDomain] = (pages[currentURLDomain]+1) || 1 ;
 
   try {
     const res = await fetch(currentURL);
 
     if (res.status > 399) {
       console.log(`ERROR: ${res.status}, at url: ${currentURL}`);
-      return pages;
+      return
     }
 
     const contentType = res.headers.get('Content-Type');
     if (!contentType.includes('text/html')) {
       console.log(`ERROR: content-type not text/html, it is ${contentType} instead, at url: ${currentURL}`);
-      return pages;
+      return
     }
 
+    // console.log(await res.status);
+    // console.log(Object.keys(pages));
+
+    // Make a list of found links
     const urlList = getURLsFromHTML(await res.text(), currentURL);
-    // why is my code stuck in an infinite loop?
+    
+    // call each link on the list recursively.
     urlList.forEach(url => {
-      // crawl each url only once
-      const urlDom = normalizeURL(url);
-      if (!pages.hasOwnProperty(urlDom)) {
-        return crawlPage(baseURL, url, pages);
-      } else {
-        return pages;
-      }
+      crawlPage(currentURL, url, pages);
     });
   } catch (err) {
     console.log(`ERROR: ${err.message}, at url ${currentURL}`);

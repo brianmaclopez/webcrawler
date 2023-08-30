@@ -1,8 +1,8 @@
 // Test on https://wagslane.dev
 
-const { crawlPage } = require('./crawl');
+const { crawlPage, normalizeURL } = require('./crawl');
 
-async function main() {
+function main() {
   const argv = process.argv.slice(2);
   if (!argv.length) {
     console.log('provide URL argument');
@@ -15,9 +15,10 @@ async function main() {
   }
 
   console.log(`waiting for crawl page`);
+  const pages = {};
   baseUrl = argv[0];
-  console.log(await crawlPage(baseUrl, baseUrl, {}));
-
+  crawlPage(baseUrl, baseUrl, pages);
+  console.log(pages);
 }
 
 main();

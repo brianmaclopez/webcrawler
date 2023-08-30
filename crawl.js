@@ -2,43 +2,51 @@ const { JSDOM } = require('jsdom')
 
 async function crawlPage(baseURL, currentURL, pages) {
   // pages => {}
-
-  console.log(`crawling ${currentURL}...`);
-
-  const baseURLDomain = normalizeURL(baseURL);
+  const baseURLObj = new URL(baseURL);
+  const currentURLObj = new URL(currentURL);
   const currentURLDomain = normalizeURL(currentURL);
+  console.log(`crawling ${currentURL}...`);
+  // const baseURLDomain = normalizeURL(baseURL);
 
   // Base case
-  if (baseURLDomain.hostname !== currentURLDomain.hostname) {
+  if (baseURLObj.hostname !== currentURLObj.hostname) {
     return pages;
   }
 
-  // JS shorthand. Add pages entry with val of 1 if not found else add 1 to current val
-  pages[currentURLDomain] = (pages[currentURLDomain]+1) || 1 ;
+  // pages[currentURLDomain] = (pages[currentURLDomain]+1) || 1 ;
+  if (pages.hasOwnProperty(currentURLDomain)) {
+    pages[currentURLDomain]++;
+    return pages;
+  } else if (baseURL === currentURL) {
+    pages[currentURLDomain] = 0;
+  } else {
+    pages[currentURLDomain] = 1;
+  }
 
   try {
     const res = await fetch(currentURL);
 
     if (res.status > 399) {
       console.log(`ERROR: ${res.status}, at url: ${currentURL}`);
-      return
+      return pages;
     }
 
     const contentType = res.headers.get('Content-Type');
     if (!contentType.includes('text/html')) {
       console.log(`ERROR: content-type not text/html, it is ${contentType} instead, at url: ${currentURL}`);
-      return
+      return pages;
     }
 
-    // console.log(await res.status);
-    // console.log(Object.keys(pages));
-
-    // Make a list of found links
     const urlList = getURLsFromHTML(await res.text(), currentURL);
-    
-    // call each link on the list recursively.
+    // why is my code stuck in an infinite loop?
     urlList.forEach(url => {
-      crawlPage(currentURL, url, pages);
+      // crawl each url only once
+      const urlDom = normalizeURL(url);
+      if (!pages.hasOwnProperty(urlDom)) {
+        return crawlPage(baseURL, url, pages);
+      } else {
+        return pages;
+      }
     });
   } catch (err) {
     console.log(`ERROR: ${err.message}, at url ${currentURL}`);
